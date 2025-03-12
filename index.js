@@ -12,7 +12,14 @@ async function run() {
         console.log("Cheking changes in .local.env...");
 
         // Retrieve changes in .local.env
-        const diffOutput = execSync('git diff HEAD^ HEAD -- .local.env', {encoding: 'utf8'});
+        let diffOutput;
+        try {
+            diffOutput = execSync('git diff HEAD^ HEAD -- .local.env', {encoding: 'utf8'});
+        }catch (error) {
+            console.warn("Not Enough commits for HEAD^, using initial commit.");
+            diffOutput = execSync('git diff HEAD -- .local.env', {encoding: 'utf8'});
+        }
+        
         
         // Filter only changes in KAFKA_SCHEMA_REGISTRY_* variables
         const schemaChanges = diffOutput.
