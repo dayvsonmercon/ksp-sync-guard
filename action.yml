@@ -9,11 +9,11 @@ inputs:
   ksp-repo:
     description: "Repository of Kafka-secure-proxy"
     required: false
-    default: saltpay/kafka-secure-proxy
+    default: dayvsonmercon/schema-validation-test
   topics-file-path:
     description: "Path of application-topics.yml in Project"
     required: false
-    default: kafka-secure-proxy/kafka-secure-proxy-service/src/main/resources/application-topics.yml
+    default: kafka-secure-proxy/application-topics.yml
 
 runs:
   using: 'node20'
