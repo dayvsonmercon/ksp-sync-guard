@@ -14,6 +14,13 @@ async function run() {
 
         console.log("Cheking changes in .local.env...");
 
+        console.log("Fetching full Git history to enable diff...");
+        try {
+            execSync('git fetch --unshallow');
+        } catch (error){
+            console.warn(" Repository was already fully cloned or not shallow.");
+        }
+
         // Retrieve changes in .local.env
         let diffOutput;
         try {
