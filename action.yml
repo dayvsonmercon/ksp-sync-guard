@@ -13,7 +13,7 @@ inputs:
   topics-file-path:
     description: "Path of application-topics.yml in Project"
     required: false
-    default: kafka-secure-proxy/kafka-secure-proxy-service/src/main/resource/application-topics.yml
+    default: kafka-secure-proxy/kafka-secure-proxy-service/src/main/resources/application-topics.yml
 
 runs:
   using: 'node20'
