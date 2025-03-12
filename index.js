@@ -1,6 +1,9 @@
 const core = require('@actions/core');
 const { execSync } = require('child_process');
 const github = require('@actions/github');
+const yaml = require('js-yaml');
+const fs = require('fs');
+const { pipeline } = require('stream');
 
 async function run() {
     try{
@@ -20,11 +23,13 @@ async function run() {
             diffOutput = execSync('git diff HEAD -- .local.env', {encoding: 'utf8'});
         }
         
+        console.log("Raw git diff output:");
+        console.log(diffOutput);
         
         // Filter only changes in KAFKA_SCHEMA_REGISTRY_* variables
         const schemaChanges = diffOutput.
             split('\n').
-            filter(line => line.startsWith('+') && line.includes('KAFKA_SCHEMA-REGISTRY_')).
+            filter(line => line.startsWith('+') && line.includes('KAFKA_SCHEMA_REGISTRY_')).
             map(line => line.replace('+', '').trim());
 
         if( schemaChanges.length == 0){
@@ -47,12 +52,26 @@ async function run() {
 
         // Decode the content of application-topics.yml
         const contentKsp = Buffer.from(fileContent.content, 'base64').toString('utf8');
+        const yamlData = yaml.load(contentKsp);
+
+        // Extract all schema subjects
+        let schemaSubjects = [];
+        if (yamlData.app  && yamlData.app.consumers){
+            Object.values(yamlData.app.consumers).forEach(
+                consumer => {
+                    if(consumer["pipelines-config"] && consumer["pipelines-config"]["schema-subject"]){
+                        let subjects = consumer["pipelines-config"]["schema-subject"].split(',').map(s => s.trim());
+                        schemaSubjects.push(...subjects);
+                    }
+                }
+            );
+        }
 
         // Check if each schema is present in application-topics.yml
         let missingSchemas = [];
         schemaChanges.forEach(change => {
             const [key, value] = change.split('=');
-            if (!contentKsp.includes(value)) {
+            if (!schemaSubjects.includes(value)) {
                 missingSchemas.push({ key, value}); 
             }
         });
