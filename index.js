@@ -53,7 +53,7 @@ async function run() {
             owner: kspRepo.split('/')[0],
             repo: kspRepo.split('/')[1],
             path: topicsFilePath,
-            ref: 'dev'
+            ref: 'teste'
         });
 
 
