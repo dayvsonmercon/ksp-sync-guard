@@ -46,7 +46,7 @@ async function run() {
         schemaChanges.forEach(change => {
             const [key, value] = change.split('=');
             if (!contentKsp.includes(value)) {
-                missingSchemas.push({ key, value});
+                missingSchemas.push({ key, value}); 
             }
         });
 
