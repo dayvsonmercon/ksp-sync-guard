@@ -1,0 +1,1 @@
+# ksp-sync-guard
