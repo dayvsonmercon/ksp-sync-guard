@@ -1,0 +1,19 @@
+name: "Schema Sync Checks"
+description: "Check if schema versions are updated"
+
+inputs:
+  github-token:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
+    required: false
+  ksp-repo:
+    description: "Repository of Kafka-secure-proxy"
+    required: false
+    default: saltpay/kafka-secure-proxy
+  topics-file-path-ksp:
+    description: "Path of application-topics.yml in Project"
+    default: kafka-secure-proxy/kafka-secure-proxy-service/src/main/resource/application-topics.yml
+
+runs:
+  using: 'node20'
+  main: 'index.js'
